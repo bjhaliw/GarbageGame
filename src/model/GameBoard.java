@@ -21,8 +21,23 @@ public class GameBoard {
 		this.deck = cardList;
 	}
 	
-	public boolean checkGameStatus() {
+	public boolean checkGameIsOver() {
+		int counter = 0;
+
+		for (int i = 0; i < this.playerList.size(); i++) {
+			for (Card card : this.playerList.get(i).getCardList()) {
+				if (card.isFaceDown() == false) {
+					counter++;
+				}
+			}
+			
+			if (counter == this.playerList.get(i).getNumCards()) {
+				return true;
+			}
+		}
 		
+		return false;
+
 	}
 
 	public List<Card> getCardList() {
@@ -62,7 +77,7 @@ public class GameBoard {
 			}
 		}
 
-		gameStatus = true;
+		this.gameStatus = true;
 	}
 
 	public void takeTurn(List<Card> deck, List<Card> discard, Player player) {
@@ -76,9 +91,8 @@ public class GameBoard {
 		}
 		
 	
-		if (this.gameStatus == true) {
+		gameStatus = checkGameIsOver();
 			
-		}
 	}
 	
 	public Card takeTurnAux(Player player, Card card) {
