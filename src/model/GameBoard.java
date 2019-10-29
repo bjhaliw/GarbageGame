@@ -9,13 +9,19 @@ public class GameBoard {
 	List<Card> deck;
 	List<Card> discard;
 	List<Player> playerList;
-	boolean gameStatus;
+	boolean gameIsOver;
 
-	public GameBoard() {
+	public GameBoard(int numPlayers) {
 		this.deck = new ArrayList<>();
-		this.playerList = new ArrayList<>();
 		this.discard = new ArrayList<>();
+		
+		this.playerList = new ArrayList<>();
+		
+		for (int i = 0; i < numPlayers; i++) {
+			this.playerList.add(new Player());
+		}
 	}
+	
 
 	public GameBoard(List<Card> cardList) {
 		this.deck = cardList;
@@ -32,6 +38,8 @@ public class GameBoard {
 			}
 			
 			if (counter == this.playerList.get(i).getNumCards()) {
+				i++;
+				System.out.println("Player " + i + " is the winner!");
 				return true;
 			}
 		}
@@ -42,12 +50,6 @@ public class GameBoard {
 
 	public List<Card> getCardList() {
 		return this.deck;
-	}
-
-	public void addPlayers(int numPlayers) {
-		for (int i = 0; i < numPlayers; i++) {
-			this.playerList.add(new Player());
-		}
 	}
 
 	public void setCardList(List<Card> cardList) {
@@ -76,22 +78,38 @@ public class GameBoard {
 				this.deck.remove(0);
 			}
 		}
+		
+		this.discard.add(deck.get(0));
+		
+		this.deck.remove(0);
 
-		this.gameStatus = true;
+		this.gameIsOver = false;
 	}
 
-	public void takeTurn(List<Card> deck, List<Card> discard, Player player) {
+	public void takeTurn(Player player) {
 		Card current;
 		Card temp;
+		
+		if(this.deck.size() == 0) {
+			gameIsOver = true;
+			System.out.println("No one wins");
+			return;
+		}
 		
 		if(checkCard(player, discard.get(discard.size() - 1)) == true) {
 			current = takeTurnAux(player, discard.get(discard.size() - 1));
 		} else {
 			current = takeTurnAux(player, deck.get(0));
+			
+			if(this.deck.size() > 0) {
+				this.deck.remove(0);
+			}
+			
 		}
 		
-	
-		gameStatus = checkGameIsOver();
+		discard.add(current);
+		
+		gameIsOver = checkGameIsOver();
 			
 	}
 	
@@ -101,23 +119,33 @@ public class GameBoard {
 			return card;
 		}
 		
-		Card current;
+		Card current;		
 		
-		player.getCardList().get(card.getValue().getIntValue()).setFaceDown(false);
-		
-		current = player.getCardList().get(card.getValue().getIntValue());
+		current = player.getCardList().get(card.getValue().getIntValue() - 1);
 		
 		player.getCardList().set(card.getValue().getIntValue() - 1, card);
-	
-		takeTurnAux(player, current);
 		
-		return card;
+		player.getCardList().get(card.getValue().getIntValue() - 1).setFaceDown(false);
+	
+		return takeTurnAux(player, current);
+
 		
 	}
 
+	/**
+	 * Checks to see if the card that the player drew is actually needed
+	 * @param player
+	 * @param card
+	 * @return
+	 */
 	public boolean checkCard(Player player, Card card) {
-		if (card.value.getIntValue() == player.getCardList().get(card.value.getIntValue()).value.getIntValue()) {
-			if (player.getCardList().get(card.value.getIntValue()).faceDown == true) {
+		
+		if(card.getValue() == CardValue.Jack || card.getValue() == CardValue.Queen) {
+			return false;
+		}
+		
+		if (card.value.getIntValue() <= player.getCardList().size()) {
+			if (player.getCardList().get(card.value.getIntValue() - 1).faceDown == true) {
 				return true;
 			}
 		}
@@ -134,7 +162,7 @@ public class GameBoard {
 	public void printPlayerList() {
 		for (int i = 0; i < this.playerList.size(); i++) {
 			for (Card card : this.playerList.get(i).getCardList()) {
-				System.out.println("Player " + i + ": " + card);
+				System.out.println("Player " + (i + 1) + ": " + card);
 			}
 		}
 	}

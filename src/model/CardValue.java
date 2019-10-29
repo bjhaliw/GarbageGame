@@ -16,11 +16,11 @@ public enum CardValue {
 	public int getIntValue() {
 		switch (this) {
 		case Jack:
-			return 10;
+			return 11;
 		case Queen:
-			return 10;
+			return 12;
 		case King:
-			return 10;
+			return 13;
 		default:
 			return Integer.parseInt(value);
 		}
