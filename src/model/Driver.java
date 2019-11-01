@@ -1,9 +1,13 @@
 package model;
 
+import java.util.Random;
+
 public class Driver {
 
 	public static void main(String[] args) {
-		GameBoard board = new GameBoard(3);
+		Random random = new Random(1);
+		GameBoard board = new GameBoard(3, random);
+
 
 		board.dealCards();
 		
@@ -13,6 +17,7 @@ public class Driver {
 			if(board.gameIsOver == true) {
 				break;
 			}
+			
 			board.takeTurn(board.playerList.get(1));
 			
 			if(board.gameIsOver == true) {
@@ -20,6 +25,8 @@ public class Driver {
 			}
 			
 			board.takeTurn(board.playerList.get(2));
+			
+
 			
 		}
 		

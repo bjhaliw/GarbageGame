@@ -37,7 +37,7 @@ public class Card {
 	}
 	
 	public String toString() {
-		return "Value: " + this.value + ", Suit: " + this.suit;
+		return "Value: " + this.value + ", Suit: " + this.suit + ", FaceDown: " + this.faceDown;
 	}
 
 }
