@@ -2,7 +2,7 @@ package model;
 
 public enum CardSuit {
 
-	SPADES("Spades"), CLUBS("Clubs"), HEARTS("Hearts"), DIAMONDS("Diamonds");
+	SPADES("S"), CLUBS("C"), HEARTS("H"), DIAMONDS("D");
 
 	CardSuit(String value) {
 		this.value = value;

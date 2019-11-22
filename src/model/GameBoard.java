@@ -28,6 +28,10 @@ public class GameBoard {
 	public GameBoard(List<Card> cardList) {
 		this.deck = cardList;
 	}
+	
+	public int getNumPlayers() {
+		return playerList.size();	
+	}
 
 	public boolean checkGameIsOver() {
 		int counter = 0;
@@ -56,6 +60,10 @@ public class GameBoard {
 
 	public List<Card> getCardList() {
 		return this.deck;
+	}
+	
+	public Card getDiscardCard() {
+		return discard.get(0);
 	}
 
 	public void setCardList(List<Card> cardList) {
@@ -157,6 +165,46 @@ public class GameBoard {
 		}
 
 		return false;
+	}
+
+	public List<Card> getDeck() {
+		return deck;
+	}
+
+	public void setDeck(List<Card> deck) {
+		this.deck = deck;
+	}
+
+	public List<Card> getDiscard() {
+		return discard;
+	}
+
+	public void setDiscard(List<Card> discard) {
+		this.discard = discard;
+	}
+
+	public List<Player> getPlayerList() {
+		return playerList;
+	}
+
+	public void setPlayerList(List<Player> playerList) {
+		this.playerList = playerList;
+	}
+
+	public boolean isGameIsOver() {
+		return gameIsOver;
+	}
+
+	public void setGameIsOver(boolean gameIsOver) {
+		this.gameIsOver = gameIsOver;
+	}
+
+	public Random getRandom() {
+		return random;
+	}
+
+	public void setRandom(Random random) {
+		this.random = random;
 	}
 
 	public void printDeck() {
