@@ -9,10 +9,14 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BorderPane;
@@ -39,12 +43,23 @@ public class CardGameGUI extends Application {
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		int sceneWidth = 1000, sceneHeight = 1000;
+		AnchorPane anchor = new AnchorPane();
+		MenuBar bar = new MenuBar();
+		Menu file = new Menu("File");
+		MenuItem newGame = new MenuItem("New Game");
+		file.getItems().add(newGame);
+		bar.getMenus().add(file);
+		anchor.getChildren().add(pane);
+		pane.setPrefSize(sceneWidth, sceneHeight);
 
-		// pane.backgroundProperty().set(new Background(new
-		// BackgroundFill(Color.DARKGREEN, CornerRadii.EMPTY, Insets.EMPTY)));
+		VBox box = new VBox(10);
+
+		
+		box.getChildren().addAll(bar, pane);
+
 		mainMenu();
 
-		Scene scene = new Scene(pane, sceneWidth, sceneHeight);
+		Scene scene = new Scene(box, sceneWidth, sceneHeight);
 		primaryStage.setTitle("Card Game");
 		primaryStage.setScene(scene);
 		primaryStage.show();
@@ -62,17 +77,26 @@ public class CardGameGUI extends Application {
 
 		field.setOnKeyPressed(e -> {
 			if (e.getCode().equals(KeyCode.ENTER)) {
-				board = new GameBoard(Integer.parseInt(field.getText()), new Random());
-				pane.setCenter(null);
-				dealCards();
+				if(Integer.parseInt(field.getText()) < 5 && Integer.parseInt(field.getText()) > 0) {
+					board = new GameBoard(Integer.parseInt(field.getText()), new Random());
+					pane.setCenter(null);
+					dealCards();
+					pane.setBottom(players.get(0));		
+					pane.setTop(players.get(1));
+				}
+				
 			}
 
 		});
 
 		button.setOnAction(e -> {
-			board = new GameBoard(Integer.parseInt(field.getText()), new Random());
-			pane.setCenter(null);
-			dealCards();
+			if(Integer.parseInt(field.getText()) < 5 && Integer.parseInt(field.getText()) > 0) {
+				board = new GameBoard(Integer.parseInt(field.getText()), new Random());
+				pane.setCenter(null);
+				dealCards();
+				pane.setBottom(players.get(0));		
+				pane.setTop(players.get(1));
+			}
 		});
 
 		box.getChildren().addAll(label, field, button);
@@ -81,6 +105,7 @@ public class CardGameGUI extends Application {
 
 	public void dealCards() {
 		board.dealCards();
+		VBox box = new VBox(); 
 		HBox center = new HBox(10);
 		center.setAlignment(Pos.CENTER);
 		center.getChildren().add(new ImageView(new Image("gui/images/b1fv.gif")));
@@ -119,27 +144,9 @@ public class CardGameGUI extends Application {
 					bottom.getChildren().add(new ImageView(new Image("gui/images/b1fv.gif")));
 				}
 			}
-
-			/*
-			 * for(int j = 0; j < 10; j++) { suit =
-			 * board.getPlayerList().get(i).getCardList().get(j).getSuit().getValue(); value
-			 * = board.getPlayerList().get(i).getCardList().get(j).getValue().getValue();
-			 * cardInfo = suit + value;
-			 * 
-			 * if (j < 5) { top.getChildren().add(new ImageView(new Image("gui/images/" +
-			 * cardInfo + ".gif"))); } else { bottom.getChildren().add(new ImageView(new
-			 * Image("gui/images/" + cardInfo + ".gif"))); } }
-			 */
-
 		}
 
-		System.out.println(board.getPlayerList().get(0).getCardList().toString());
-		System.out.println(board.getPlayerList().get(1).getCardList().toString());
-		// System.out.println(board.getPlayerList().get(2).getCardList().toString());
-		// System.out.println(board.getPlayerList().get(3).getCardList().toString());
-
-		pane.setBottom(players.get(0));
-		pane.setTop(players.get(1));
+		
 
 	}
 

@@ -35,7 +35,16 @@ public class Card {
 	public void setFaceDown(boolean faceDown) {
 		this.faceDown = faceDown;
 	}
-	
+
+	public String cardImage() {
+		if (this.faceDown == true) {
+			return "gui/images/b1fv.gif";
+		} else {
+
+			return "gui/images/" + this.suit.getValue() + this.value.getValue() + ".gif";
+		}
+	}
+
 	public String toString() {
 		return "Value: " + this.value + ", Suit: " + this.suit + ", FaceDown: " + this.faceDown;
 	}

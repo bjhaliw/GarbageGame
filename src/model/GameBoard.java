@@ -63,7 +63,7 @@ public class GameBoard {
 	}
 	
 	public Card getDiscardCard() {
-		return discard.get(0);
+		return this.discard.get(0);
 	}
 
 	public void setCardList(List<Card> cardList) {
@@ -102,10 +102,9 @@ public class GameBoard {
 
 	public void takeTurn(Player player) {
 		Card current;
-		Card temp;
 
 		if (this.deck.size() == 0) {
-			gameIsOver = true;
+			this.gameIsOver = true;
 			System.out.println("No one wins");
 			return;
 		}
@@ -121,9 +120,9 @@ public class GameBoard {
 
 		}
 
-		discard.add(current);
+		this.discard.add(current);
 
-		gameIsOver = checkGameIsOver();
+		this.gameIsOver = checkGameIsOver();
 
 	}
 
