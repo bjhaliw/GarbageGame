@@ -42,7 +42,7 @@ public class CardGameGUI extends Application {
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-		int sceneWidth = 1000, sceneHeight = 1000;
+		int sceneWidth = 600, sceneHeight = 720;
 		AnchorPane anchor = new AnchorPane();
 		MenuBar bar = new MenuBar();
 		Menu file = new Menu("File");
