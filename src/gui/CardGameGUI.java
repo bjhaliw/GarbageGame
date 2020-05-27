@@ -29,15 +29,26 @@ import model.Card;
 import model.GameBoard;
 import model.Player;
 
+/**
+ * This class creates and controls the GUI to display the card game. The
+ * cards are dealt out to the players and then at the click of a button the 
+ * cards are automatically dealt and flipped.
+ * @author Brenton Haliw
+ *
+ */
 public class CardGameGUI extends Application {
 
-	GameBoard board;
-	BorderPane pane;
-	ArrayList<VBox> players;
+	private GameBoard board;
+	private BorderPane pane;
+	private ArrayList<VBox> players;
 
+	/**
+	 * Default constructor for the CardGameGUI object. Initializes the 
+	 * BorderPane object and the ArrayList containing the players
+	 */
 	public CardGameGUI() {
-		pane = new BorderPane();
-		players = new ArrayList<>();
+		this.pane = new BorderPane();
+		this.players = new ArrayList<>();
 	}
 
 	@Override
@@ -49,13 +60,12 @@ public class CardGameGUI extends Application {
 		MenuItem newGame = new MenuItem("New Game");
 		file.getItems().add(newGame);
 		bar.getMenus().add(file);
-		anchor.getChildren().add(pane);
-		pane.setPrefSize(sceneWidth, sceneHeight);
+		anchor.getChildren().add(this.pane);
+		this.pane.setPrefSize(sceneWidth, sceneHeight);
 
 		VBox box = new VBox(10);
-
-		
-		box.getChildren().addAll(bar, pane);
+	
+		box.getChildren().addAll(bar, this.pane);
 
 		mainMenu();
 
@@ -66,10 +76,16 @@ public class CardGameGUI extends Application {
 
 	}
 
+	/**
+	 * The intro menu that the user is greeted with. Allows the user
+	 * to input the amount of players that they wish to face (max of 4)
+	 */
 	public void mainMenu() {
 		VBox box = new VBox(10);
 		box.setAlignment(Pos.CENTER);
-		Label label = new Label("Please enter number of players");
+		Label label = new Label("Please enter between 2 and 4 players");
+		Label warningLabel = new Label("Must be between 2 and 4 players!");
+		warningLabel.setVisible(false);
 		TextField field = new TextField();
 		field.setPromptText("# Players");
 		field.setMaxWidth(100);
@@ -77,34 +93,37 @@ public class CardGameGUI extends Application {
 
 		field.setOnKeyPressed(e -> {
 			if (e.getCode().equals(KeyCode.ENTER)) {
-				if(Integer.parseInt(field.getText()) < 5 && Integer.parseInt(field.getText()) > 0) {
-					board = new GameBoard(Integer.parseInt(field.getText()), new Random());
-					pane.setCenter(null);
+				if(Integer.parseInt(field.getText()) < 5 && Integer.parseInt(field.getText()) > 1) {
+					this.board = new GameBoard(Integer.parseInt(field.getText()), new Random());
+					this.pane.setCenter(null);
 					dealCards();
-					pane.setBottom(players.get(0));		
-					pane.setTop(players.get(1));
-				}
-				
+					this.pane.setBottom(this.players.get(0));		
+					this.pane.setTop(this.players.get(1));
+				} else {
+					warningLabel.setVisible(true);
+				}			
 			}
 
 		});
 
 		button.setOnAction(e -> {
-			if(Integer.parseInt(field.getText()) < 5 && Integer.parseInt(field.getText()) > 0) {
-				board = new GameBoard(Integer.parseInt(field.getText()), new Random());
-				pane.setCenter(null);
+			if(Integer.parseInt(field.getText()) < 5 && Integer.parseInt(field.getText()) > 1) {
+				this.board = new GameBoard(Integer.parseInt(field.getText()), new Random());
+				this.pane.setCenter(null);
 				dealCards();
-				pane.setBottom(players.get(0));		
-				pane.setTop(players.get(1));
+				this.pane.setBottom(this.players.get(0));		
+				this.pane.setTop(this.players.get(1));
+			} else {
+				warningLabel.setVisible(true);
 			}
 		});
 
-		box.getChildren().addAll(label, field, button);
-		pane.setCenter(box);
+		box.getChildren().addAll(label, field, button, warningLabel);
+		this.pane.setCenter(box);
 	}
 
 	public void dealCards() {
-		board.dealCards();
+		this.board.dealCards();
 		VBox box = new VBox(); 
 		HBox center = new HBox(10);
 		center.setAlignment(Pos.CENTER);
@@ -114,7 +133,7 @@ public class CardGameGUI extends Application {
 			takeTurn();
 		});
 
-		Card card = board.getDiscardCard();
+		Card card = this.board.getDiscardCard();
 
 		String suit = card.getSuit().getValue();
 		String value = card.getValue().getValue();
@@ -124,9 +143,9 @@ public class CardGameGUI extends Application {
 		center.getChildren().add(new ImageView(new Image("gui/images/" + cardInfo + ".gif")));
 		center.getChildren().add(button);
 
-		pane.setCenter(center);
+		this.pane.setCenter(center);
 
-		for (int i = 0; i < board.getNumPlayers(); i++) {
+		for (int i = 0; i < this.board.getNumPlayers(); i++) {
 			HBox top = new HBox(10);
 			HBox bottom = new HBox(10);
 			VBox playerBox = new VBox(10);
@@ -134,8 +153,8 @@ public class CardGameGUI extends Application {
 			top.setAlignment(Pos.CENTER);
 			bottom.setAlignment(Pos.CENTER);
 
-			players.add(playerBox);
-			players.get(i).getChildren().addAll(top, bottom);
+			this.players.add(playerBox);
+			this.players.get(i).getChildren().addAll(top, bottom);
 
 			for (int j = 0; j < 10; j++) {
 				if (j < 5) {
@@ -145,43 +164,41 @@ public class CardGameGUI extends Application {
 				}
 			}
 		}
-
-		
-
 	}
 
 	public void takeTurn() {
-		if (board.checkGameIsOver() == false) {
-			for (int j = 0; j < board.getNumPlayers(); j++) {
-				Player player = board.getPlayerList().get(j);
-				board.takeTurn(player);
+		if (this.board.checkGameIsOver() == false) {
+			for (int j = 0; j < this.board.getNumPlayers(); j++) {
+				Player player = this.board.getPlayerList().get(j);
+				this.board.takeTurn(player);
 
 				for (int i = 0; i < 10; i++) {
-					if (board.getPlayerList().get(j).getCardList().get(i).isFaceDown() == false) {
+					if (this.board.getPlayerList().get(j).getCardList().get(i).isFaceDown() == false) {
 						String suit = player.getCardList().get(i).getSuit().getValue();
 						String value = player.getCardList().get(i).getValue().getValue();
 						String cardInfo = suit + value;
 						HBox box;
 
 						if (i < 5) {
-							box = (HBox) players.get(j).getChildren().get(0);
+							box = (HBox) this.players.get(j).getChildren().get(0);
 							box.getChildren().set(i, new ImageView(new Image("gui/images/" + cardInfo + ".gif")));
 						} else {
-							box = (HBox) players.get(j).getChildren().get(1);
+							box = (HBox) this.players.get(j).getChildren().get(1);
 							box.getChildren().set(i - 5, new ImageView(new Image("gui/images/" + cardInfo + ".gif")));
 						}
+
 					}
 				}
 			}
 
-			String suit = board.getDiscard().get(board.getDiscard().size() - 1).getSuit().getValue();
-			String value = board.getDiscard().get(board.getDiscard().size() - 1).getValue().getValue();
+			String suit = this.board.getDiscard().get(this.board.getDiscard().size() - 1).getSuit().getValue();
+			String value = this.board.getDiscard().get(this.board.getDiscard().size() - 1).getValue().getValue();
 			String cardInfo = suit + value;
 
-			HBox box = (HBox) pane.getCenter();
+			HBox box = (HBox) this.pane.getCenter();
 			box.getChildren().set(1, new ImageView(new Image("gui/images/" + cardInfo + ".gif")));
 
-			if (board.getDeck().size() == 0) {
+			if (this.board.getDeck().size() == 0) {
 				box.getChildren().remove(0);
 			}
 		}
